@@ -18,9 +18,9 @@ public class Main {
 
         for (Thread thread : threads){
             thread.start();
-            //thread.suspend();
+            thread.suspend();
         }
-/*
+
         while (true){
             userInput = scan.nextLine();
             userInputChopped = userInput.split(" ");
@@ -35,7 +35,6 @@ public class Main {
                     break;
             }
         }
-        */
     }
 
     static void resumeThreads(String userInputChopped[]){
@@ -59,26 +58,22 @@ public class Main {
     static class MyRunnable implements Runnable {
 
         char ch = 'A';
-        private static boolean lock = false;
 
         public void run(){
             while (true) {
-                test();
+                Thread thread = Thread.currentThread();
+                new Thread(() -> System.out.println(ch++ + thread.getName())).start();
+                try {
+                    thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (ch > 'Z')
+                    ch = 'A';
             }
         }
 
-        private synchronized void test() {
-            Thread thread = Thread.currentThread();
-            synchronized (this) {
-                System.out.println(ch++ + thread.getName());
-            }
-            try {
-                thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (ch > 'Z')
-                ch = 'A';
-        }
+
+
     }
 }
